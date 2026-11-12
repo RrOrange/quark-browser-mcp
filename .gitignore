@@ -1,0 +1,5 @@
+node_modules/
+*.log
+tabs.json
+mcp-http.log
+.DS_Store

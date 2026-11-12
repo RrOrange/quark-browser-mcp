@@ -1,0 +1,24 @@
+{
+  "name": "quark-browser-mcp",
+  "version": "0.1.0",
+  "description": "MCP server that drives the browser you are already logged into, over the Chrome DevTools Protocol",
+  "type": "module",
+  "bin": {
+    "quark-browser-mcp": "./server.mjs"
+  },
+  "files": ["server.mjs", "README.md", "LICENSE"],
+  "engines": {
+    "node": ">=22"
+  },
+  "keywords": [
+    "mcp",
+    "model-context-protocol",
+    "cdp",
+    "chrome-devtools-protocol",
+    "browser-automation",
+    "quark",
+    "chromium",
+    "ai-agent"
+  ],
+  "license": "MIT"
+}
