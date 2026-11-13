@@ -6,7 +6,15 @@
   "bin": {
     "quark-browser-mcp": "./server.mjs"
   },
-  "files": ["server.mjs", "README.md", "LICENSE"],
+  "files": ["server.mjs", "README.md", "README.zh-CN.md", "LICENSE"],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RrOrange/quark-browser-mcp.git"
+  },
+  "homepage": "https://github.com/RrOrange/quark-browser-mcp#readme",
+  "bugs": {
+    "url": "https://github.com/RrOrange/quark-browser-mcp/issues"
+  },
   "engines": {
     "node": ">=22"
   },
