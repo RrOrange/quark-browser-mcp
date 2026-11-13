@@ -11,9 +11,6 @@
 // env:
 //   QUARK_CDP   CDP 地址，默认 http://127.0.0.1:9223
 import http from "node:http"
-import { readFile, readdir } from "node:fs/promises"
-import { fileURLToPath } from "node:url"
-import { dirname, join, normalize } from "node:path"
 
 const CDP = (process.env.QUARK_CDP || "http://127.0.0.1:9223").replace(/\/+$/, "")
 
@@ -394,38 +391,6 @@ if (httpIdx >= 0) {
     console.error(`quark-browser-mcp on http://127.0.0.1:${port}/mcp  (cdp ${CDP})`)
   })
 } else {
-  // stdio 模式：可选再开一个只读文件服务，供网页（GitHub 上传页等）拉取本目录的文件。
-  // 只在设置了 QUARK_FILE_PORT 时启用，只读、只允许本目录下的文件、带 CORS。
-  const filePort = Number(process.env.QUARK_FILE_PORT || 0)
-  if (filePort) {
-    const root = dirname(fileURLToPath(import.meta.url))
-    http
-      .createServer(async (req, res) => {
-        res.setHeader("access-control-allow-origin", "*")
-        res.setHeader("access-control-allow-headers", "*")
-        res.setHeader("access-control-allow-methods", "GET,OPTIONS")
-        if (req.method === "OPTIONS") return res.writeHead(204).end()
-        const u = new URL(req.url, "http://127.0.0.1")
-        try {
-          if (u.pathname === "/list") {
-            const files = (await readdir(root)).filter((f) => !f.startsWith(".") || f === ".gitignore")
-            return res.writeHead(200, { "content-type": "application/json" }).end(JSON.stringify(files))
-          }
-          if (u.pathname === "/file") {
-            const name = normalize(u.searchParams.get("p") || "").replace(/^([/\\])+/, "")
-            const full = join(root, name)
-            if (!full.startsWith(root)) return res.writeHead(403).end("forbidden")
-            const buf = await readFile(full)
-            return res.writeHead(200, { "content-type": "text/plain; charset=utf-8" }).end(buf)
-          }
-          res.writeHead(404).end("not found")
-        } catch (e) {
-          res.writeHead(404, { "content-type": "text/plain" }).end(String(e.message))
-        }
-      })
-      .listen(filePort, "127.0.0.1", () => console.error(`file server on http://127.0.0.1:${filePort}`))
-  }
-
   let buf = ""
   process.stdin.setEncoding("utf8")
   process.stdin.on("data", async (chunk) => {
